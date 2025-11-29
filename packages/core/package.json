@@ -1,0 +1,34 @@
+{
+  "name": "@payxone/core",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && tsc-esm-fix dist",
+    "lint": "eslint .",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "jest": "^30.2.0",
+    "jiti": "^2.6.1",
+    "tsc-esm-fix": "^3.1.2",
+    "typescript-eslint": "^8.46.3"
+  },
+  "dependencies": {
+    "ts-node": "^10.9.2"
+  }
+}
