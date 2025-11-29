@@ -1,3 +1,4 @@
+// Supported payment methods across gateways
 export type PaymentMethod =
   | 'card'
   | 'bank_transfer'
@@ -6,61 +7,79 @@ export type PaymentMethod =
   | 'virtual_account'
   | 'other';
 
+// Unified payment status values used by core
 export type PaymentStatus = 'requires_action' | 'pending' | 'succeeded' | 'failed' | 'canceled';
 
-export interface PaymentRequest {
-  amount: number;
-  currency: string;
-  method?: PaymentMethod;
-  description?: string;
-  customerId?: string;
-  metadata?: Record<string, string>;
-  capture?: boolean;
-  // provider-specific fields permitted
-  [key: string]: any;
+// Base request fields required for creating a payment
+export interface BasePaymentRequest {
+  amount: number; // Amount in smallest currency unit (e.g. cents)
+  currency: string; // ISO currency code (e.g. "USD", "IDR")
+  method?: PaymentMethod; // Optional standardized payment method
+  description?: string; // Optional description for the payment
+  customerId?: string; // Optional customer identifier
+  metadata?: Record<string, string>; // Arbitrary metadata key-value pairs
+  capture?: boolean; // Whether to capture immediately (if supported)
 }
 
-export interface PaymentResponse {
-  id: string;
-  status: PaymentStatus;
-  amount: number;
-  currency: string;
-  method?: PaymentMethod;
-  createdAt: string;
-  updatedAt?: string;
-  raw?: unknown;
+// Generic PaymentRequest allows adapters to add custom fields
+export type PaymentRequest<T extends Record<string, unknown> = Record<string, never>> =
+  BasePaymentRequest & T;
+
+// Standardized response returned by core after payment operations
+// Adapters can attach raw provider payloads via generic type
+export interface PaymentResponse<T extends Record<string, unknown> = Record<string, never>> {
+  id: string; // Unique identifier of the payment
+  status: PaymentStatus; // Unified status value
+  amount: number; // Amount in smallest currency unit
+  currency: string; // ISO currency code
+  method?: PaymentMethod; // Optional standardized method
+  createdAt: string; // ISO timestamp when payment was created
+  updatedAt?: string; // Optional ISO timestamp when updated
+  raw?: T; // Provider-specific raw payload for debugging
 }
 
+// Request type for retrieving a payment by ID
 export interface PaymentRetrieveRequest {
   id: string;
 }
 
+// Request type for canceling a payment
 export interface PaymentCancelRequest {
   id: string;
-  reason?: string;
+  reason?: string; // Optional cancellation reason
 }
 
-export interface PaymentGateway {
-  create(request: PaymentRequest): Promise<PaymentResponse>;
-  retrieve(request: PaymentRetrieveRequest): Promise<PaymentResponse>;
-  cancel(request: PaymentCancelRequest): Promise<PaymentResponse>;
+// Contract that every adapter must implement for the payment domain
+export interface PaymentGateway<
+  Req extends Record<string, unknown> = Record<string, never>,
+  Res extends Record<string, unknown> = Record<string, never>,
+> {
+  create(request: PaymentRequest<Req>): Promise<PaymentResponse<Res>>;
+  retrieve(request: PaymentRetrieveRequest): Promise<PaymentResponse<Res>>;
+  cancel(request: PaymentCancelRequest): Promise<PaymentResponse<Res>>;
 }
 
-export interface GatewayAdapter {
-  payment: PaymentGateway;
+// Adapter contract: each provider (Stripe, Xendit, etc.) must expose a payment gateway
+export interface GatewayAdapter<
+  Req extends Record<string, unknown> = Record<string, never>,
+  Res extends Record<string, unknown> = Record<string, never>,
+> {
+  payment: PaymentGateway<Req, Res>;
 }
 
-// High-level params accepted by orchestrator
-export interface PaymentCreateParams {
-  gateway: string;
-  body: PaymentRequest;
+// High-level params accepted by PayXOne orchestrator for multi-adapter routing
+export interface PaymentCreateParams<Req extends Record<string, unknown> = Record<string, never>> {
+  gateway: string; // Key identifying which adapter to use
+  body: PaymentRequest<Req>; // Request body passed to the adapter
 }
+
 export interface PaymentRetrieveParams {
-  gateway: string;
-  id: string;
+  gateway: string; // Key identifying which adapter to use
+  id: string; // Payment ID to retrieve
 }
+
 export interface PaymentCancelParams {
-  gateway: string;
-  id: string;
-  reason?: string;
+  gateway: string; // Key identifying which adapter to use
+  id: string; // Payment ID to cancel
+  reason?: string; // Optional cancellation reason
 }
