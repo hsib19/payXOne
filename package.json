@@ -5,9 +5,11 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "test": "echo \"No tests yet\"",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "prepare": "husky"
+    "prepare": "husky",
+    "prepush": "turbo run lint test build --parallel"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
