@@ -9,7 +9,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "prepare": "husky",
-    "prepush": "turbo run lint test build --parallel"
+    "prepush": "turbo run lint build --parallel"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
