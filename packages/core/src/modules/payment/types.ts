@@ -22,12 +22,11 @@ export interface BasePaymentRequest {
 }
 
 // Generic PaymentRequest allows adapters to add custom fields
-export type PaymentRequest<T extends Record<string, unknown> = Record<string, never>> =
-  BasePaymentRequest & T;
+export type PaymentRequest<T extends object = {}> = BasePaymentRequest & T;
 
 // Standardized response returned by core after payment operations
 // Adapters can attach raw provider payloads via generic type
-export interface PaymentResponse<T extends Record<string, unknown> = Record<string, never>> {
+export interface PaymentResponse<T extends object = {}> {
   id: string; // Unique identifier of the payment
   status: PaymentStatus; // Unified status value
   amount: number; // Amount in smallest currency unit
@@ -50,25 +49,19 @@ export interface PaymentCancelRequest {
 }
 
 // Contract that every adapter must implement for the payment domain
-export interface PaymentGateway<
-  Req extends Record<string, unknown> = Record<string, never>,
-  Res extends Record<string, unknown> = Record<string, never>,
-> {
+export interface PaymentGateway<Req extends object = {}, Res extends object = {}> {
   create(request: PaymentRequest<Req>): Promise<PaymentResponse<Res>>;
   retrieve(request: PaymentRetrieveRequest): Promise<PaymentResponse<Res>>;
   cancel(request: PaymentCancelRequest): Promise<PaymentResponse<Res>>;
 }
 
 // Adapter contract: each provider (Stripe, Xendit, etc.) must expose a payment gateway
-export interface GatewayAdapter<
-  Req extends Record<string, unknown> = Record<string, never>,
-  Res extends Record<string, unknown> = Record<string, never>,
-> {
+export interface GatewayAdapter<Req extends object = {}, Res extends object = {}> {
   payment: PaymentGateway<Req, Res>;
 }
 
 // High-level params accepted by PayXOne orchestrator for multi-adapter routing
-export interface PaymentCreateParams<Req extends Record<string, unknown> = Record<string, never>> {
+export interface PaymentCreateParams<Req extends object = {}> {
   gateway: string; // Key identifying which adapter to use
   body: PaymentRequest<Req>; // Request body passed to the adapter
 }
