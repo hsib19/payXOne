@@ -1,11 +1,11 @@
 import { CoreError } from '../../errors';
-import { AdapterRegistry } from './registry';
+import { AdapterRegistry } from './payment.adapter.registry';
 import {
   PaymentCancelParams,
   PaymentCreateParams,
   PaymentResponse,
   PaymentRetrieveParams,
-} from './types';
+} from './payment.types';
 
 export class PaymentService {
   constructor(private readonly registry: AdapterRegistry) {}

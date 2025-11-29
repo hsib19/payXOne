@@ -1,5 +1,5 @@
-import { AdapterRegistry } from '../src/modules/payment/registry';
-import { GatewayAdapter } from '../src/modules/payment/types';
+import { AdapterRegistry } from '../src/modules/payment/payment.adapter.registry';
+import { GatewayAdapter } from '../src/modules/payment/payment.types';
 
 describe('AdapterRegistry', () => {
   const mockAdapter: GatewayAdapter = {

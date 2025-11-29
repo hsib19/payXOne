@@ -5,10 +5,10 @@ import {
   PaymentResponse,
   PaymentRetrieveParams,
   PaymentStatus,
-} from '../src/modules/payment/types';
+} from '../src/modules/payment/payment.types';
 
 // Mock PaymentService so we can drive success/error paths precisely
-import { PaymentService } from '../src/modules/payment/services';
+import { PaymentService } from '../src/modules/payment/payment.services';
 jest.mock('../src/modules/payment/services');
 
 describe('PayXOne wrapper', () => {

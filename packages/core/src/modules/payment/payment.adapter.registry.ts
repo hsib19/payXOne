@@ -1,4 +1,4 @@
-import { GatewayAdapter } from './types';
+import { GatewayAdapter } from './payment.types';
 
 export type AdapterKey = string;
 export type AdapterMap = Record<AdapterKey, GatewayAdapter>;

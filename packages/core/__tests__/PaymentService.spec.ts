@@ -1,13 +1,13 @@
 import { CoreError } from '../src/errors';
-import { AdapterRegistry } from '../src/modules/payment/registry';
-import { PaymentService } from '../src/modules/payment/services';
+import { AdapterRegistry } from '../src/modules/payment/payment.adapter.registry';
+import { PaymentService } from '../src/modules/payment/payment.services';
 import {
   PaymentCancelParams,
   PaymentCreateParams,
   PaymentResponse,
   PaymentRetrieveParams,
   PaymentStatus,
-} from '../src/modules/payment/types';
+} from '../src/modules/payment/payment.types';
 
 describe('PaymentService', () => {
   let registry: AdapterRegistry;

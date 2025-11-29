@@ -1,11 +1,11 @@
-import { AdapterMap, AdapterRegistry } from './modules/payment/registry';
-import { PaymentService } from './modules/payment/services';
+import { AdapterMap, AdapterRegistry } from './modules/payment/payment.adapter.registry';
+import { PaymentService } from './modules/payment/payment.services';
 import {
   PaymentCancelParams,
   PaymentCreateParams,
   PaymentResponse,
   PaymentRetrieveParams,
-} from './modules/payment/types';
+} from './modules/payment/payment.types';
 
 export class PayXOne {
   private readonly registry: AdapterRegistry;

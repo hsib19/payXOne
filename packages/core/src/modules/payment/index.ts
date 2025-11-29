@@ -1,3 +1,3 @@
-export * from './registry';
-export * from './services';
-export * from './types';
+export * from './payment.adapter.registry';
+export * from './payment.services';
+export * from './payment.types';
