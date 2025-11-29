@@ -11,11 +11,13 @@ export type PaymentStatus = 'requires_action' | 'pending' | 'succeeded' | 'faile
 export interface PaymentRequest {
   amount: number;
   currency: string;
-  method: PaymentMethod;
+  method?: PaymentMethod;
   description?: string;
   customerId?: string;
   metadata?: Record<string, string>;
   capture?: boolean;
+  // provider-specific fields permitted
+  [key: string]: any;
 }
 
 export interface PaymentResponse {
@@ -23,7 +25,7 @@ export interface PaymentResponse {
   status: PaymentStatus;
   amount: number;
   currency: string;
-  method: PaymentMethod;
+  method?: PaymentMethod;
   createdAt: string;
   updatedAt?: string;
   raw?: unknown;
@@ -46,4 +48,19 @@ export interface PaymentGateway {
 
 export interface GatewayAdapter {
   payment: PaymentGateway;
+}
+
+// High-level params accepted by orchestrator
+export interface PaymentCreateParams {
+  gateway: string;
+  body: PaymentRequest;
+}
+export interface PaymentRetrieveParams {
+  gateway: string;
+  id: string;
+}
+export interface PaymentCancelParams {
+  gateway: string;
+  id: string;
+  reason?: string;
 }
